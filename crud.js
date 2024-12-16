@@ -39,7 +39,42 @@ function product() {
 }
 
 function getProducts() {
-  return JSON.parse(localStorage.getItem("products"));
+  function getData() {
+    let myProducts = JSON.parse(localStorage.getItem("products"));
+
+    if (products && myProducts && myProducts.length > 0) {
+      products.innerHTML = "";
+      for (const product of myProducts) {
+        var div = document.createElement("div");
+        div.classList += "card";
+
+        div.innerHTML = `
+            <div class="card-im">
+              <img
+                src="${product.image}"
+              />
+            </div>
+
+            <div class="text-card"><h2>${product.name}</h2></div>
+            <div class="p-card">
+              <p>
+              ${product.dedescription}
+                </p>
+              <h3>${Product.Price}</h3>
+              <h3>${product.quantity}</h3>
+
+              <div class="button">
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+              </div>
+            </div>`;
+        products.appendChild(div);
+      }
+    } else {
+      console.log("Something went wrong");
+    }
+  }
+  // return JSON.parse(localStorage.getItem("products"));
 }
 
 function setProducts(event) {
