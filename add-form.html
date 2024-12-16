@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="form.css" />
+  </head>
+  <body>
+    <div class="product_vi">
+      <h2>product view form</h2>
+    </div>
+
+    <div class="container">
+      <form id="form" onsubmit="event.preventDefault();setProducts(event)">
+        <div class="row">
+          <div class="col-25">
+            <label for="proname">Product Name</label>
+          </div>
+          <div class="col-75">
+            <input
+              type="text"
+              id="ProductName"
+              name="name"
+              placeholder="Product name.."
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="pprice">Product Price</label>
+          </div>
+          <div class="col-75">
+            <input
+              type="text"
+              id="ProductPrice"
+              name="ProductPrice"
+              placeholder="Rs.."
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="pquantity">Product quantity</label>
+          </div>
+          <div class="col-75">
+            <select id="Productquantity" name="Product quantity">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="pdescription">Product description</label>
+          </div>
+          <div class="col-75">
+            <textarea
+              id="Productdescription"
+              name="pdescription"
+              placeholder="Product description.."
+              style="height: 200px"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="pimagelink">Product image link</label>
+          </div>
+          <div class="col-75">
+            <input
+              type="text"
+              id="Productimagelink"
+              name="Productimagelink"
+              placeholder="Productimagelink..."
+            />
+          </div>
+        </div>
+        <div class="manbutten">
+          <div class="cancel">
+            <button type="cancel">cancel</button>
+          </div>
+
+          <div class="submit">
+            <button type="submit">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <script src="crud.js"></script>
+  </body>
+</html>

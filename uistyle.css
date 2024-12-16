@@ -1,0 +1,160 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+/* -------------header---------------- */
+.header {
+  background-color: silver;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+/* ------------logo---------- */
+.logo {
+  width: 200px;
+  width: 33%;
+}
+.logo img {
+  height: 100px;
+  width: 200px;
+}
+/* -----------product-text----------- */
+.product {
+  width: 33%;
+  text-align: center;
+}
+
+/* --------------manview---------------- */
+.manview {
+  display: flex;
+  width: 33%;
+  justify-content: end;
+}
+/* ---------------listview--------------- */
+.listview img {
+  width: 25px;
+  height: 25px;
+  padding: 10px;
+}
+
+.listview:hover {
+  background-color: white;
+  cursor: pointer;
+}
+/* ---------------gridview-------------- */
+.gridview img {
+  width: 25px;
+  height: 25px;
+  padding: 10px;
+}
+
+.gridview:hover {
+  background-color: white;
+  cursor: pointer;
+}
+
+/* ------------main-container---------------- */
+.main-container {
+  display: flex;
+}
+
+/* ---------------add-butten---------------- */
+.addbutten {
+  display: flex;
+  justify-content: end;
+  margin-right: 95px;
+}
+.addbutten button {
+  width: 80px;
+  height: 40px;
+  background-color: #45a049;
+  color: white;
+}
+.addbutten button:hover {
+  background-color: #04aa6d;
+  color: black;
+}
+
+/* ----------------hero-part------------- */
+
+.hero-part {
+  background-color: darkgrey;
+  width: 15%;
+  /* height: 840px; */
+}
+
+.dashbord a {
+  display: flex;
+  font-size: 30px;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.dashbord :hover {
+  color: brown;
+  background-color: black;
+  cursor: pointer;
+}
+
+/* --------------card-content---------------- */
+.main-card {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding-left: 58px;
+  padding-top: 10px;
+}
+
+.card-content {
+  width: 95%;
+  padding: 20px;
+}
+
+.card {
+  background-color: antiquewhite;
+  border: 2px solid red;
+  width: 330px;
+  /* height: 400px; */
+}
+
+.card-im img {
+  height: 200px;
+  width: 330px;
+  border-bottom: 2px solid red;
+}
+
+.text-card h2 {
+  text-align: center;
+}
+
+.p-card p {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.p-card h3 {
+  margin-left: 10px;
+}
+
+/* ---------------button--------------------- */
+.button {
+  display: flex;
+  padding: 10px;
+}
+
+.edit {
+  width: 60px;
+  height: 50px;
+}
+
+.delete {
+  width: 60px;
+  height: 50px;
+  margin-left: 190px;
+}
