@@ -12,7 +12,7 @@
     </div>
 
     <div class="container">
-      <form id="form" onsubmit="event.preventDefault();setProducts(event)">
+      <form id="form" onsubmit="setProducts(event)">
         <div class="row">
           <div class="col-25">
             <label for="name">Product Name</label>
@@ -75,12 +75,11 @@
           </div>
         </div>
         <div class="manbutten">
-          <div class="cancel">
-            <button>cancel</button>
-          </div>
-
           <div class="submit">
             <button type="submit">Submit</button>
+          </div>
+          <div class="cancel">
+            <button type="button">cancel</button>
           </div>
         </div>
       </form>
