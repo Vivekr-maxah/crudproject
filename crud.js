@@ -29,14 +29,28 @@ function getProducts() {
               <h3>${product.quantity}</h3>
 
               <div class="button">
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
+                <button class="edit" data-id="${id}">Edit</button>
+                <button class="delete"data-id="${id}>Delete</button>
               </div>
             </div>`;
+
       productList.appendChild(div);
     }
   } else {
     console.log("Something went wrong");
+  }
+
+  var editBtn = document.querySelectorAll(".edit"); //edit-button//
+  var deleteBtn = document.querySelectorAll(".delete"); //delete-button//
+
+  for (let i = 0; i < deleteBtn.length; i++) {
+    deleteBtn[i].addEventListener("click", () => {
+      deleteProduct(i + 1);
+    });
+    editBtn[i].addEventListener("click", (event) => {
+      formContainer.style.display = "flex";
+      editProduct(event, i);
+    });
   }
 }
 
@@ -44,8 +58,8 @@ function setProducts(event) {
   event.preventDefault();
   const data = new FormData(event.target);
   const products = Object.fromEntries(data.entries());
-  products.id = id;
   let myProducts = JSON.parse(localStorage.getItem("products")) || [];
+  products.id = myProducts.length + 1;
   myProducts.push(products);
   localStorage.setItem("products", JSON.stringify(myProducts));
   id++;
@@ -55,18 +69,22 @@ function setProducts(event) {
 
 // assign ids to products available
 function assignIdsToProducts() {
-  var productData = JSON.parse(localStorage.getItem("products")) || [];
-
-  for (const product of productData) {
-    ids.push(product.id);
-  }
-  let maximumID = Math.max.apply(null, ids);
-  if (ids.length === 0 || maximumID === -Infinity) {
-    id = 1;
-  } else {
-    id = maximumID + 1;
-  }
+  let productData = JSON.parse(localStorage.getItem("products")) || [];
+  productData.forEach((e, i) => {
+    e.id = i + 1;
+  });
+  maximumID = productData.length || 1;
 }
 
-assignIdsToProducts();
-getProducts();
+function deleteProduct(id) {
+  let myProducts = JSON.parse(localStorage.getItem("products")) || [];
+  const deleteID = myProducts.findIndex((item) => item.id == id);
+  myProducts.splice(deleteID, 1);
+  localStorage.setItem("products", JSON.stringify(myProducts));
+  getProducts();
+}
+
+if (window.location.href.split("/").at(-1) == "crud.html") {
+  assignIdsToProducts();
+  getProducts();
+}
