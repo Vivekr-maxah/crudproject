@@ -3,12 +3,13 @@ var form = document.getElementById("form");
 var productList = document.getElementById("productList");
 var id;
 var ids = [];
+var input = document.querySelectorAll("input");
 
 function getProducts() {
   let myProducts = JSON.parse(localStorage.getItem("products")) || [];
 
+  productList.innerHTML = "";
   if (myProducts && myProducts.length > 0) {
-    productList.innerHTML = "";
     for (const product of myProducts) {
       var div = document.createElement("div");
       div.classList += "card";
@@ -29,8 +30,8 @@ function getProducts() {
               <h3>${product.quantity}</h3>
 
               <div class="button">
-                <button class="edit" data-id="${id}">Edit</button>
-                <button class="delete"data-id="${id}>Delete</button>
+                <button class="edit" data-id="${product.id}">Edit <b>${product.id}</b></button>
+                <button class="delete"data-id="${product.id}">Delete <b>${product.id}</b></button>
               </div>
             </div>`;
 
@@ -48,10 +49,45 @@ function getProducts() {
       deleteProduct(i + 1);
     });
     editBtn[i].addEventListener("click", (event) => {
-      formContainer.style.display = "flex";
+      window.location.replace("add-form.html");
+      fieldpass(i); //fieldpass//
       editProduct(event, i);
     });
   }
+}
+
+// -------------fieldpass------------//
+function fieldpass(i) {
+  let objValues = Object.values(productCollection[i - 1]);
+  for (let index = 0; index < input.length; index++) {
+    formInputs[index].value = objValues[index];
+  }
+}
+
+// ----------editProduct------------//
+
+function editProduct(event) {
+  const productId = parseInt(event.target.dataset.id); // Get the product ID from the button
+  let myProducts = JSON.parse(localStorage.getItem("products")) || [];
+
+  // Find the product by its ID
+  let productToEdit = myProducts.find((product) => product.id === productId);
+
+  // Ensure the form container exists before trying to show it
+  const formContainer = document.getElementById("container");
+  if (formContainer) {
+    formContainer.style.display = "block"; // Show the form container
+  } else {
+    console.error("container not found!");
+  }
+
+  // Fill the form inputs with the current product data
+  const form = document.getElementById("productForm");
+  form.name.value = productToEdit.name;
+  form.price.value = productToEdit.price;
+  form.quantity.value = productToEdit.quantity;
+  form.description.value = productToEdit.description;
+  form.image.value = productToEdit.image;
 }
 
 function setProducts(event) {
@@ -65,6 +101,7 @@ function setProducts(event) {
   id++;
   form.reset();
   window.location.href = "crud.html";
+  assignIdsToProducts();
 }
 
 // assign ids to products available
@@ -74,6 +111,7 @@ function assignIdsToProducts() {
     e.id = i + 1;
   });
   maximumID = productData.length || 1;
+  localStorage.setItem("products", JSON.stringify(productData));
 }
 
 function deleteProduct(id) {
@@ -81,6 +119,7 @@ function deleteProduct(id) {
   const deleteID = myProducts.findIndex((item) => item.id == id);
   myProducts.splice(deleteID, 1);
   localStorage.setItem("products", JSON.stringify(myProducts));
+  assignIdsToProducts();
   getProducts();
 }
 
@@ -88,3 +127,57 @@ if (window.location.href.split("/").at(-1) == "crud.html") {
   assignIdsToProducts();
   getProducts();
 }
+
+// function validation() {
+//   const name = document.getElementById("name");
+//   const price = document.getElementById("price");
+//   const quantity = document.getElementById("quantity");
+//   const description = document.getElementById("description");
+//   const image = document.getElementById("image");
+//   let errors = [];
+
+//   // Validate Name
+//   if (!name.value.trim()) {
+//     errors.push("Name is required.");
+//   }
+
+//   // Validate Price
+//   if (!price.value.trim() || isNaN(price.value) || price.value <= 0) {
+//     errors.push("Price must be a valid number greater than 0.");
+//   }
+
+//   // Validate Quantity
+//   if (!quantity.value.trim() || isNaN(quantity.value) || quantity.value <= 0) {
+//     errors.push("Quantity must be a valid number greater than 0.");
+//   }
+
+//   // Validate Description
+//   if (!description.value.trim()) {
+//     errors.push("Description is required.");
+//   } else {
+//     // Condition 1: Length check
+//     if (description.value.length < 10 || description.value.length > 200) {
+//       errors.push("Description must be between 10 and 200 characters.");
+//     }
+
+//     // Condition 2: Check for restricted words
+//     const restrictedWords = ["invalid", "test", "error"];
+//     for (const word of restrictedWords) {
+//       if (description.value.toLowerCase().includes(word)) {
+//         errors.push(`Description cannot contain the word "${word}".`);
+//         break;
+//       }
+//     }
+//   }
+
+//   // Validate Image URL
+//   if (!image.value.trim()) {
+//     errors.push("Image URL is required.");
+//   }
+
+//   // Display Errors or Submit Form
+//   if (errors.length > 0) {
+//     alert(errors.join("\n")); // Display all errors
+//     return false; // Stop form submission
+//   }
+// }
