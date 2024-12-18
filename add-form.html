@@ -3,16 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Add Product</title>
     <link rel="stylesheet" href="form.css" />
   </head>
+
   <body>
     <div class="product_vi">
-      <h2>product view form</h2>
+      <h2>Product View Form</h2>
     </div>
 
-    <div class="container" id="container">
-      <form id="form" onsubmit="setProducts(event)">
+    <div class="container">
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <input type="hidden" id="id" />
+
         <div class="row">
           <div class="col-25">
             <label for="name">Product Name</label>
@@ -21,8 +24,8 @@
             <input
               type="text"
               id="name"
-              name="name"
-              placeholder="Product name.."
+              placeholder="Product name..."
+              required
             />
           </div>
         </div>
@@ -31,59 +34,66 @@
             <label for="price">Product Price</label>
           </div>
           <div class="col-75">
-            <input type="text" id="price" name="price" placeholder="Rs.." />
+            <input type="text" id="price" placeholder="Rs..." required />
           </div>
         </div>
         <div class="row">
           <div class="col-25">
-            <label for="quantity">Product quantity</label>
+            <label for="quantity">Product Quantity</label>
           </div>
           <div class="col-75">
-            <select id="quantity" name="quantity">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
+            <input
+              type="text"
+              id="quantity"
+              placeholder="Quantity..."
+              required
+            />
+          </div>
+          <div class="col-25">
+            <label for="tag">Product tag</label>
+          </div>
+          <div class="col-75">
+            <input type="text" id="tag" placeholder="tag..." required />
           </div>
         </div>
         <div class="row">
           <div class="col-25">
-            <label for="description">Product description</label>
+            <label for="description">Product Description</label>
           </div>
           <div class="col-75">
             <textarea
               id="description"
-              name="description"
-              placeholder="Product description.."
+              placeholder="Product description..."
               style="height: 200px"
             ></textarea>
           </div>
         </div>
         <div class="row">
           <div class="col-25">
-            <label for="image">Product image link</label>
+            <label for="image">Product Image Link</label>
           </div>
           <div class="col-75">
             <input
               type="text"
               id="image"
-              name="image"
-              placeholder="Productimagelink..."
+              placeholder="Product image link..."
+              required
             />
           </div>
         </div>
         <div class="manbutten">
           <div class="submit">
-            <button type="submit">Submit</button>
+            <button type="submit">Save</button>
           </div>
           <div class="cancel">
-            <button type="button">cancel</button>
+            <button type="button" onclick="window.location.href='crud.html'">
+              Cancel
+            </button>
           </div>
         </div>
       </form>
     </div>
+
     <script src="crud.js" defer></script>
   </body>
 </html>

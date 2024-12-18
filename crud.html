@@ -3,55 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Product CRUD</title>
     <link rel="stylesheet" href="uistyle.css" />
+    <link rel="icon" type="image/x-icon" href="./img-s/logo.png" />
   </head>
+
   <body>
     <div class="container">
       <div class="header">
-        <!-- -------logo-------- -->
+        <!-- Logo -->
         <div class="logo">
-          <img src="./img-s/logo1.png" />
+          <img src="./img-s/logo1.png" alt="Logo" />
         </div>
-        <!-- --------headeng---------- -->
+        <!-- Heading -->
         <div class="product">
-          <h2>product view items</h2>
+          <h2>Product View Items</h2>
         </div>
-
-        <!-- ------------list view and grid view--------------- -->
+        <!-- List and Grid View -->
         <div class="manview">
           <div class="listview">
             <img
               src="https://cdn-icons-png.flaticon.com/512/3603/3603140.png"
+              alt="List View"
             />
           </div>
           <div class="gridview">
             <img
               src="https://cdn-icons-png.flaticon.com/512/3603/3603178.png"
+              alt="Grid View"
             />
           </div>
         </div>
       </div>
     </div>
-    <!-- ----------------main-container-------------- -->
+
+    <!-- Main Container -->
     <div class="main-container">
       <div class="hero-part">
         <div class="dashbord">
-          <a>Dashbord</a>
+          <a href="#">Dashboard</a>
           <hr />
         </div>
       </div>
       <div class="card-content">
-        <!-- ----------------addbutten-------------------- -->
+        <!-- Add Button -->
         <div class="addbutten">
-          <button onclick="window.location.href='add-form.html' ">ADD</button>
+          <button onclick="window.location.href='add-form.html'">ADD</button>
         </div>
-        <div class="main-card" id="productList">
-          <!-- ---------------------card------------------- -->
-        </div>
+        <div class="main-card" id="productList"></div>
       </div>
     </div>
-    <!-- -----------js code------------ -->
+
     <script src="crud.js" defer></script>
   </body>
 </html>

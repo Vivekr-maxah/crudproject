@@ -1,183 +1,285 @@
-var product = document.getElementById("product");
-var form = document.getElementById("form");
-var productList = document.getElementById("productList");
-var id;
-var ids = [];
-var input = document.querySelectorAll("input");
+const productList = document.getElementById("productList");
 
-function getProducts() {
-  let myProducts = JSON.parse(localStorage.getItem("products")) || [];
-
+// Fetch Products and Render
+function loadProducts() {
+  const products = JSON.parse(localStorage.getItem("products")) || [];
   productList.innerHTML = "";
-  if (myProducts && myProducts.length > 0) {
-    for (const product of myProducts) {
-      var div = document.createElement("div");
-      div.classList += "card";
 
-      div.innerHTML = `
-            <div class="card-im">
-              <img
-                src="${product.image}"
-              />
-            </div>
-
-            <div class="text-card"><h2>${product.name}</h2></div>
-            <div class="p-card">
-              <p>
-              ${product.description}
-                </p>
-              <h3>${product.price}</h3>
-              <h3>${product.quantity}</h3>
-
-              <div class="button">
-                <button class="edit" data-id="${product.id}">Edit <b>${product.id}</b></button>
-                <button class="delete"data-id="${product.id}">Delete <b>${product.id}</b></button>
-              </div>
-            </div>`;
-
-      productList.appendChild(div);
-    }
-  } else {
-    console.log("Something went wrong");
-  }
-
-  var editBtn = document.querySelectorAll(".edit"); //edit-button//
-  var deleteBtn = document.querySelectorAll(".delete"); //delete-button//
-
-  for (let i = 0; i < deleteBtn.length; i++) {
-    deleteBtn[i].addEventListener("click", () => {
-      deleteProduct(i + 1);
-    });
-    editBtn[i].addEventListener("click", (event) => {
-      window.location.replace("add-form.html");
-      fieldpass(i); //fieldpass//
-      editProduct(event, i);
-    });
-  }
-}
-
-// -------------fieldpass------------//
-function fieldpass(i) {
-  let objValues = Object.values(productCollection[i - 1]);
-  for (let index = 0; index < input.length; index++) {
-    formInputs[index].value = objValues[index];
-  }
-}
-
-// ----------editProduct------------//
-
-function editProduct(event) {
-  const productId = parseInt(event.target.dataset.id); // Get the product ID from the button
-  let myProducts = JSON.parse(localStorage.getItem("products")) || [];
-
-  // Find the product by its ID
-  let productToEdit = myProducts.find((product) => product.id === productId);
-
-  // Ensure the form container exists before trying to show it
-  const formContainer = document.getElementById("container");
-  if (formContainer) {
-    formContainer.style.display = "block"; // Show the form container
-  } else {
-    console.error("container not found!");
-  }
-
-  // Fill the form inputs with the current product data
-  const form = document.getElementById("productForm");
-  form.name.value = productToEdit.name;
-  form.price.value = productToEdit.price;
-  form.quantity.value = productToEdit.quantity;
-  form.description.value = productToEdit.description;
-  form.image.value = productToEdit.image;
-}
-
-function setProducts(event) {
-  event.preventDefault();
-  const data = new FormData(event.target);
-  const products = Object.fromEntries(data.entries());
-  let myProducts = JSON.parse(localStorage.getItem("products")) || [];
-  products.id = myProducts.length + 1;
-  myProducts.push(products);
-  localStorage.setItem("products", JSON.stringify(myProducts));
-  id++;
-  form.reset();
-  window.location.href = "crud.html";
-  assignIdsToProducts();
-}
-
-// assign ids to products available
-function assignIdsToProducts() {
-  let productData = JSON.parse(localStorage.getItem("products")) || [];
-  productData.forEach((e, i) => {
-    e.id = i + 1;
+  products.forEach((product) => {
+    const card = `
+      <div class="card">
+        <div class="card-im">
+          <img src="${product.image}" alt="${product.name}" />
+        </div>
+        <div class="text-card">
+          <h2>${product.name}</h2>
+        </div>
+        <div class="p-card">
+          <p>${product.description}</p>
+          <h3>Price: ${product.price}</h3>
+          <h3>Quantity: ${product.quantity}</h3>
+          <div class="tags">
+          ${tagTemplate(product.tags)}
+          </div>
+          <div class="button">
+            <button onclick="handleProductAction(${
+              product.id
+            }, 'edit')" class="edit">Edit</button>
+            <button onclick="handleProductAction(${
+              product.id
+            }, 'delete')" class="delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+    productList.insertAdjacentHTML("beforeend", card);
   });
-  maximumID = productData.length || 1;
-  localStorage.setItem("products", JSON.stringify(productData));
+  // console.log(products);
 }
 
-function deleteProduct(id) {
-  let myProducts = JSON.parse(localStorage.getItem("products")) || [];
-  const deleteID = myProducts.findIndex((item) => item.id == id);
-  myProducts.splice(deleteID, 1);
-  localStorage.setItem("products", JSON.stringify(myProducts));
-  assignIdsToProducts();
-  getProducts();
+// Save Product (Add or Update)
+function saveProduct(event) {
+  event.preventDefault();
+
+  const id = document.getElementById("id").value;
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+  const quantity = document.getElementById("quantity").value;
+  const description = document.getElementById("description").value;
+  const image = document.getElementById("image").value;
+  const tags = document.getElementById("tag").value;
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  if (id) {
+    // Update Product
+    products = products.map((p) =>
+      p.id == id
+        ? { id: Number(id), name, price, quantity, tags, description, image }
+        : p
+    );
+  } else {
+    // Add Product
+    const newProduct = {
+      id: products.length ? products[products.length - 1].id + 1 : 1,
+      name,
+      price,
+      quantity,
+      tags,
+      description,
+      image,
+    };
+    products.push(newProduct);
+  }
+
+  localStorage.setItem("products", JSON.stringify(products));
+  window.location.href = "crud.html";
 }
 
-if (window.location.href.split("/").at(-1) == "crud.html") {
-  assignIdsToProducts();
-  getProducts();
+// Edit or Delete Product
+function handleProductAction(id, action) {
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  if (action === "edit") {
+    const product = products.find((p) => p.id == id);
+    localStorage.setItem("editProduct", JSON.stringify(product));
+    window.location.href = "add-form.html";
+  } else if (action === "delete") {
+    products = products.filter((p) => p.id != id);
+    localStorage.setItem("products", JSON.stringify(products));
+    setID(products);
+    loadProducts();
+  }
 }
 
-// function validation() {
-//   const name = document.getElementById("name");
-//   const price = document.getElementById("price");
-//   const quantity = document.getElementById("quantity");
-//   const description = document.getElementById("description");
-//   const image = document.getElementById("image");
-//   let errors = [];
+// Prefill Form for Editing
+function prefillForm() {
+  const product = JSON.parse(localStorage.getItem("editProduct"));
+  if (product) {
+    document.getElementById("id").value = product.id;
+    document.getElementById("name").value = product.name;
+    document.getElementById("price").value = product.price;
+    document.getElementById("quantity").value = product.quantity;
+    document.getElementById("tag").value = product.tags;
+    document.getElementById("description").value = product.description;
+    document.getElementById("image").value = product.image;
 
-//   // Validate Name
-//   if (!name.value.trim()) {
-//     errors.push("Name is required.");
-//   }
+    localStorage.removeItem("editProduct");
+  }
+}
 
-//   // Validate Price
-//   if (!price.value.trim() || isNaN(price.value) || price.value <= 0) {
-//     errors.push("Price must be a valid number greater than 0.");
-//   }
+// Initialize Page
+if (window.location.pathname.endsWith("crud.html")) {
+  loadProducts();
+} else if (window.location.pathname.endsWith("add-form.html")) {
+  prefillForm();
+}
 
-//   // Validate Quantity
-//   if (!quantity.value.trim() || isNaN(quantity.value) || quantity.value <= 0) {
-//     errors.push("Quantity must be a valid number greater than 0.");
-//   }
+function setID(products) {
+  products.forEach((element, index) => {
+    element.id = index + 1;
+  });
+  localStorage.setItem("products", JSON.stringify(products));
+}
 
-//   // Validate Description
-//   if (!description.value.trim()) {
-//     errors.push("Description is required.");
-//   } else {
-//     // Condition 1: Length check
-//     if (description.value.length < 10 || description.value.length > 200) {
-//       errors.push("Description must be between 10 and 200 characters.");
-//     }
+function tagTemplate(tags) {
+  let tagsString = "";
+  if (tags && typeof tags === "string") {
+    tags = tags.split(",");
+    tags.forEach((tag) => {
+      tagsString += `<div class="tag">${tag.trim()}</div>`;
+    });
+    return tagsString;
+  }
+}
 
-//     // Condition 2: Check for restricted words
-//     const restrictedWords = ["invalid", "test", "error"];
-//     for (const word of restrictedWords) {
-//       if (description.value.toLowerCase().includes(word)) {
-//         errors.push(`Description cannot contain the word "${word}".`);
-//         break;
-//       }
-//     }
-//   }
+// ----------------------- validateForm----------------------
+// Save Product (Add or Update) with Validation
 
-//   // Validate Image URL
-//   if (!image.value.trim()) {
-//     errors.push("Image URL is required.");
-//   }
+function saveProduct(event) {
+  event.preventDefault();
 
-//   // Display Errors or Submit Form
-//   if (errors.length > 0) {
-//     alert(errors.join("\n")); // Display all errors
-//     return false; // Stop form submission
-//   }
-// }
+  // Validate Form Inputs
+  if (!validateForm()) return;
+
+  // Gather Form Data
+  const id = document.getElementById("id").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const price = document.getElementById("price").value.trim();
+  const quantity = document.getElementById("quantity").value.trim();
+  const tags = document.getElementById("tag").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const image = document.getElementById("image").value.trim();
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  if (id) {
+    // Update Product
+    products = products.map((p) =>
+      p.id == id
+        ? { id: Number(id), name, price, quantity, tags, description, image }
+        : p
+    );
+  } else {
+    // Add New Product
+    const newProduct = {
+      id: products.length ? products[products.length - 1].id + 1 : 1,
+      name,
+      price,
+      quantity,
+      tags,
+      description,
+      image,
+    };
+    products.push(newProduct);
+  }
+
+  // Save to localStorage
+  localStorage.setItem("products", JSON.stringify(products));
+
+  // Redirect to CRUD page
+  window.location.href = "crud.html";
+}
+
+function validateForm() {
+  // Define fields to validate
+  const fields = [
+    {
+      id: "name",
+      message: "Please enter a valid name.",
+      validate: isValidName,
+    },
+    {
+      id: "price",
+      message: "Price must be a positive integer.",
+      validate: isPositiveNumber,
+    },
+    {
+      id: "quantity",
+      message: "Quantity must be a positive integer.",
+      validate: isPositiveNumber,
+    },
+    {
+      id: "tag",
+      message: "Tags must be comma-separated words.",
+      validate: isValidTags,
+    },
+    {
+      id: "description",
+      message: "Description length should be between 3 and 100 characters.",
+      validate: isValidDescription,
+    },
+  ];
+
+  let allInputsValid = true;
+
+  // Clear existing errors
+  document
+    .querySelectorAll(".error-message")
+    .forEach((element) => element.remove());
+  document
+    .querySelectorAll(".input-error")
+    .forEach((input) => input.classList.remove("input-error"));
+
+  // Validate each field
+  fields.forEach(({ id, message, validate }) => {
+    const input = document.getElementById(id);
+    const value = input.value.trim();
+
+    if (!validate(value)) {
+      showError(input, message);
+      allInputsValid = false;
+    } else {
+      clearError(input);
+    }
+  });
+
+  return allInputsValid;
+}
+
+function showError(input, message) {
+  let error = input.nextElementSibling;
+  if (!error || !error.classList.contains("error-message")) {
+    error = document.createElement("span");
+    error.className = "error-message";
+    input.parentNode.appendChild(error);
+  }
+  input.classList.add("input-error");
+  error.innerText = message;
+
+  // Apply red border for invalid inputs
+  input.style.borderColor = "red";
+}
+
+function clearError(input) {
+  const error = input.nextElementSibling;
+  if (error && error.classList.contains("error-message")) {
+    error.remove();
+  }
+  input.classList.remove("input-error");
+
+  // Remove red border for valid inputs
+  input.style.borderColor = "";
+}
+
+// Validators
+function isValidImageURL(value) {
+  const pattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))(\?.*)?$/i;
+  return pattern.test(value);
+}
+
+function isValidName(value) {
+  return /^(?!^\d+$)[A-Za-z\d\s]+$/.test(value);
+}
+
+function isValidDescription(value) {
+  return value.length >= 3 && value.length <= 100;
+}
+
+function isPositiveNumber(value) {
+  return /^\d+$/.test(value) && parseInt(value) > 0;
+}
+
+function isValidTags(value) {
+  return value === "" || /^([\w\s]+,)*[\w\s]+$/.test(value);
+}
