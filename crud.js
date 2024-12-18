@@ -34,7 +34,6 @@ function loadProducts() {
     `;
     productList.insertAdjacentHTML("beforeend", card);
   });
-  // console.log(products);
 }
 
 // Save Product (Add or Update)
