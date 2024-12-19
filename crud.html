@@ -56,13 +56,23 @@
                 type="text"
                 name="search"
                 placeholder="Search.."
+                onkeyup="performSearch()"
               />
             </form>
+          </div>
+          <div class="sortby">
+            <select id="sortCriteria" onchange="sortProducts()">
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+            </select>
           </div>
           <button onclick="window.location.href='add-form.html'">ADD</button>
         </div>
 
         <div class="main-card" id="productList"></div>
+        <div id="paginationControls" class="pagination-controls">
+          <!-- Pagination buttons -->
+        </div>
       </div>
     </div>
 

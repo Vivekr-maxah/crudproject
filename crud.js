@@ -2,7 +2,7 @@ const productList = document.getElementById("productList");
 
 // Fetch Products and Render
 function loadProducts() {
-  const products = JSON.parse(localStorage.getItem("products")) || [];
+  var products = JSON.parse(localStorage.getItem("products")) || [];
   productList.innerHTML = "";
 
   products.forEach((product) => {
@@ -281,4 +281,172 @@ function isPositiveNumber(value) {
 
 function isValidTags(value) {
   return value === "" || /^([\w\s]+,)*[\w\s]+$/.test(value);
+}
+
+// ---------------search-------------
+function performSearch() {
+  const query = document.getElementById("searchbar").value.toLowerCase().trim(); //spaces to remove//;
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+
+  console.log(productList);
+
+  // Filter products based on the query
+  const filteredProducts = products.filter((product) => {
+    return (
+      product.name.toLowerCase().includes(query) ||
+      product.description.toLowerCase().includes(query) ||
+      product.price.includes(query) ||
+      (product.tags && product.tags.toLowerCase().includes(query))
+    );
+  });
+
+  // Display the filtered products
+  const resultsContainer = document.getElementById("productList");
+  resultsContainer.innerHTML = ""; // Clear previous results
+
+  filteredProducts.forEach((product) => {
+    const productDiv = document.createElement("div");
+    productDiv.innerHTML = ` <div class="card">
+        <div class="card-im">
+          <img src="${product.image}" alt="${product.name}" />
+        </div>
+        <div class="text-card">
+          <h2>${product.name}</h2>
+        </div>
+        <div class="p-card">
+          <p>${product.description}</p>
+          <h3>Price: ${product.price}</h3>
+          <h3>Quantity: ${product.quantity}</h3>
+          <div class="tags">
+          ${tagTemplate(product.tags)}
+          </div>
+          <div class="button">
+            <button onclick="handleProductAction(${
+              product.id
+            }, 'edit')" class="edit">Edit</button>
+            <button onclick="handleProductAction(${
+              product.id
+            }, 'delete')" class="delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+    resultsContainer.appendChild(productDiv);
+  });
+}
+
+// ---------------------sortby---------------------//
+function sortProducts() {
+  const sortCriteria = document.getElementById("sortCriteria").value;
+  const sortOrderCheckbox = document.getElementById("sortOrder");
+  const isDescending = sortOrderCheckbox ? sortOrderCheckbox.checked : false;
+
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+
+  products.sort((a, b) => {
+    if (sortCriteria === "name") {
+      return a.name.localeCompare(b.name);
+    } else if (sortCriteria === "price") {
+      return parseFloat(a.price) - parseFloat(b.price);
+    }
+  });
+
+  if (isDescending) {
+    products.reverse(); // Reverse the sorted array for descending order
+  }
+
+  localStorage.setItem("products", JSON.stringify(products));
+  loadProducts();
+}
+
+// ------------Pagination------------//
+// Global variable to track the current page
+var currentPage = 1;
+var productsPerPage = 10;
+
+// Fetch and Render Products with Pagination
+function loadProducts(page = 1) {
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+  const totalPages = Math.ceil(products.length / productsPerPage);
+  currentPage = Math.max(1, Math.min(page, totalPages)); // Ensure page is within bounds
+
+  // Clear and Render Products for the Current Page
+  const productList = document.getElementById("productList");
+  productList.innerHTML = ""; // Clear the previous products
+
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const productsToDisplay = products.slice(startIndex, endIndex);
+
+  // Render products for the current page
+  productsToDisplay.forEach((product) => {
+    const card = `
+      <div class="card">
+        <div class="card-im">
+          <img src="${product.image}" alt="${product.name}" />
+        </div>
+        <div class="text-card">
+          <h2>${product.name}</h2>
+        </div>
+        <div class="p-card">
+          <p>${product.description}</p>
+          <h3>Price: ${product.price}</h3>
+          <h3>Quantity: ${product.quantity}</h3>
+          <div class="tags">
+            ${tagTemplate(product.tags)}
+          </div>
+          <div class="button">
+            <button onclick="handleProductAction(${
+              product.id
+            }, 'edit')" class="edit">Edit</button>
+            <button onclick="handleProductAction(${
+              product.id
+            }, 'delete')" class="delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+    productList.insertAdjacentHTML("beforeend", card);
+  });
+
+  // Render Pagination Controls
+  renderPaginationControls(totalPages);
+}
+
+// Render Pagination Controls
+// Render Pagination Controls
+function renderPaginationControls(totalPages) {
+  const paginationContainer = document.getElementById("paginationControls");
+  paginationContainer.innerHTML = ""; // Clear the existing pagination controls
+
+  // Always show pagination controls if there are products
+  if (totalPages > 1 || currentPage === 1) {
+    // Add Previous Button
+    const prevButton = document.createElement("button");
+    prevButton.innerText = "Previous";
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => loadProducts(currentPage - 1);
+    paginationContainer.appendChild(prevButton);
+
+    // Add Page Buttons
+    for (let i = 1; i <= totalPages; i++) {
+      const pageButton = document.createElement("button");
+      pageButton.innerText = i;
+      pageButton.className = i === currentPage ? "active" : "";
+      pageButton.onclick = () => loadProducts(i);
+      paginationContainer.appendChild(pageButton);
+    }
+
+    // Add Next Button
+    const nextButton = document.createElement("button");
+    nextButton.innerText = "Next";
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => loadProducts(currentPage + 1);
+    paginationContainer.appendChild(nextButton);
+  }
+}
+
+// Initialize Page
+if (window.location.pathname.endsWith("crud.html")) {
+  loadProducts(); // Call the loadProducts function when the page loads
 }

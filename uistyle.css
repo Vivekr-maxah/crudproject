@@ -82,17 +82,18 @@ body {
 }
 
 .addbutten button {
-  background-color: #007bff;
+  background-color: #c82333;
   color: white;
   border: none;
   padding: 10px 100px;
   font-size: 16px;
   cursor: pointer;
   border-radius: 4px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
 .addbutten button:hover {
-  background-color: #0056b3;
+  background-color: red;
 }
 
 /* Product Cards */
@@ -199,6 +200,32 @@ body {
   border-radius: 4px;
   font-size: 16px;
   background-color: white;
+}
+
+/* -------------sortby-------------- */
+#sortCriteria {
+  height: 100%;
+  background-color: #007bff;
+  color: #fff;
+}
+/* --------------pagination------------- */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.pagination-controls button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.pagination-controls button.active {
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+}
+.pagination-controls button:disabled {
+  opacity: 0.6;
 }
 
 /* Responsive Layout */
