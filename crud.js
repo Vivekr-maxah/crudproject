@@ -11,10 +11,10 @@ function loadProducts() {
         <div class="card-im">
           <img src="${product.image}" alt="${product.name}" />
         </div>
-        <div class="text-card">
-          <h2>${product.name}</h2>
-        </div>
         <div class="p-card">
+          <div class="text-card">
+          <h2>${product.name}</h2>
+          </div>
           <p>${product.description}</p>
           <h3>Price: ${product.price}</h3>
           <h3>Quantity: ${product.quantity}</h3>
@@ -306,14 +306,14 @@ function performSearch() {
 
   filteredProducts.forEach((product) => {
     const productDiv = document.createElement("div");
-    productDiv.innerHTML = ` <div class="card">
+    productDiv.innerHTML = ` <div class="card"> 
         <div class="card-im">
           <img src="${product.image}" alt="${product.name}" />
         </div>
-        <div class="text-card">
+        <div class="p-card">
+         <div class="text-card">
           <h2>${product.name}</h2>
         </div>
-        <div class="p-card">
           <p>${product.description}</p>
           <h3>Price: ${product.price}</h3>
           <h3>Quantity: ${product.quantity}</h3>
@@ -385,10 +385,10 @@ function loadProducts(page = 1) {
         <div class="card-im">
           <img src="${product.image}" alt="${product.name}" />
         </div>
+        <div class="p-card">
         <div class="text-card">
           <h2>${product.name}</h2>
         </div>
-        <div class="p-card">
           <p>${product.description}</p>
           <h3>Price: ${product.price}</h3>
           <h3>Quantity: ${product.quantity}</h3>
@@ -449,4 +449,58 @@ function renderPaginationControls(totalPages) {
 // Initialize Page
 if (window.location.pathname.endsWith("crud.html")) {
   loadProducts(); // Call the loadProducts function when the page loads
+}
+// --------------- listview and gridview-----------------//
+// Function to switch to Grid View
+function gridview() {
+  const productList = document.getElementById("productList");
+  productList.classList.add("grid-view"); // Add grid-view class
+  productList.classList.remove("list-view"); // Remove list-view class
+
+  // Save the current view in localStorage
+  localStorage.setItem("view", "grid");
+
+  // Highlight the active button
+  toggleActiveButton("gridview");
+}
+
+// Function to switch to List View
+function listview() {
+  const productList = document.getElementById("productList");
+  productList.classList.add("list-view"); // Add list-view class
+  productList.classList.remove("grid-view"); // Remove grid-view class
+
+  // Save the current view in localStorage
+  localStorage.setItem("view", "list");
+
+  // Highlight the active button
+  toggleActiveButton("listview");
+}
+
+// Restore the view on page load
+function restoreView() {
+  const savedView = localStorage.getItem("view") || "grid";
+  if (savedView === "list") {
+    listview();
+  } else {
+    gridview();
+  }
+}
+
+// Restore the view when the page loads
+window.onload = restoreView;
+
+// Restore the view when the page loads
+window.onload = restoreView;
+// Function to toggle the active button
+function toggleActiveButton(activeClass) {
+  const btnContainer = document.getElementById("btnContainer");
+  const buttons = btnContainer.children;
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove("active");
+  }
+  const activeButton = document.querySelector(`.${activeClass}`);
+  if (activeButton) {
+    activeButton.classList.add("active");
+  }
 }
