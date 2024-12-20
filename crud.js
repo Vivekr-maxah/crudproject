@@ -466,7 +466,7 @@ function gridview() {
 
 // Function to switch to List View
 function listview() {
-  const productList = document.getElementById("productList");
+  let productList = document.getElementById("productList");
   productList.classList.add("list-view"); // Add list-view class
   productList.classList.remove("grid-view"); // Remove grid-view class
 
