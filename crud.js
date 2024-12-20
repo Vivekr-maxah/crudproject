@@ -303,10 +303,12 @@ function performSearch() {
   // Display the filtered products
   const resultsContainer = document.getElementById("productList");
   resultsContainer.innerHTML = ""; // Clear previous results
-
-  filteredProducts.forEach((product) => {
-    const productDiv = document.createElement("div");
-    productDiv.innerHTML = ` <div class="card"> 
+  if (filteredProducts.length === 0) {
+    productList.innerHTML = "<h1>No matching products found</h1>";
+  } else {
+    filteredProducts.forEach((product) => {
+      const productDiv = document.createElement("div");
+      productDiv.innerHTML = ` <div class="card"> 
         <div class="card-im">
           <img src="${product.image}" alt="${product.name}" />
         </div>
@@ -331,8 +333,9 @@ function performSearch() {
         </div>
       </div>
     `;
-    resultsContainer.appendChild(productDiv);
-  });
+      resultsContainer.appendChild(productDiv);
+    });
+  }
 }
 
 // ---------------------sortby---------------------//
